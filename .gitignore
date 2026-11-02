@@ -1,0 +1,79 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Build outputs and generated files
+**/build/
+.artifacts/
+.kotlin/
+kotlin-js-store/
+
+# IDE files
+.idea/
+
+# Logs and diagnostic output
+*.log
+app_debug*.txt
+app_error.txt
+app_output.txt
+app_stderr.txt
+app_stdout.txt
+app_run_*.txt
+app_startup_*.txt
+run_*.txt
+run_*.log
+debug_*.log
+debug_*.txt
+desktop_*.log
+desktop_*.txt
+final_*.log
+final_*.txt
+compile_check*.log
+test_run_*.txt
+last_run*.log
+new_startup*.log
+mock_context_run.log
+full_reflection_run.log
+msi_launch_*.txt
+
+# Generated installers and packages
+*.apk
+*.aab
+*.msi
+*.exe
+
+# Private credentials and signing files
+.env
+.env.*
+!.env.example
+**/secrets/
+**/secret/
+**/service-account*.json
+**/*serviceAccount*.json
+**/google-services.json
+*.jks
+*.keystore
+*.p12
+*.pfx
+
+# Generated diagnostic dependency files
+classpath.txt
+deps.txt
+deps_full.txt
+deps_jvm.txt
+jvm_deps_full.txt
+
+# Local diagnostic log
+app_log.txt

@@ -1,0 +1,99 @@
+﻿import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
+
+plugins {
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.kotlin.compose)
+    kotlin("plugin.serialization") version "2.1.0"
+}
+
+kotlin {
+    jvmToolchain(17)
+
+    androidTarget {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
+    }
+    
+    jvm() {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
+    }
+    
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(project(":shared"))
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.material3)
+                implementation(compose.ui)
+                implementation(compose.components.resources)
+                implementation(compose.components.uiToolingPreview)
+                implementation(compose.materialIconsExtended)
+            }
+        }
+        val androidMain by getting {
+            dependencies {
+                implementation(libs.androidx.activity.compose)
+                implementation(libs.ktor.client.okhttp)
+            }
+        }
+        val jvmMain by getting {
+            dependencies {
+                implementation(compose.desktop.currentOs)
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.9.0")
+                implementation(libs.ktor.client.okhttp)
+            }
+        }
+    }
+}
+
+// Global exclusion to ensure NO Android components leak into JVM
+configurations.all {
+    if (name.contains("jvmRuntimeClasspath", ignoreCase = true) || name.contains("jvmCompileClasspath", ignoreCase = true)) {
+        exclude(group = "androidx.test")
+        exclude(group = "androidx.test.ext")
+        exclude(group = "androidx.test.espresso")
+    }
+}
+
+extensions.configure<com.android.build.api.dsl.LibraryExtension> {
+    namespace = "com.example.rshotsbilling.composeapp"
+    compileSdk = 36
+
+    defaultConfig {
+        minSdk = 26
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+    
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+}
+
+compose.desktop {
+    application {
+        mainClass = "com.example.rshotsbilling.MainKt"
+        javaHome = "C:/Program Files/Eclipse Adoptium/jdk-17.0.11.9-hotspot"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Exe)
+            packageName = "com.example.rshotsbilling"
+            packageVersion = "1.0.1"
+            modules("java.compiler", "java.instrument", "java.management", "java.naming", "java.sql", "jdk.unsupported", "java.desktop", "java.xml", "java.logging", "java.prefs", "java.net.http", "jdk.crypto.ec", "jdk.security.auth", "jdk.security.jgss")
+            windows {
+                shortcut = true
+                menu = true
+                menuGroup = "Rshots Billing"
+                upgradeUuid = "3b3e3e3e-3e3e-3e3e-3e3e-3e3e3e3e3e3e"
+            }
+        }
+    }
+}
+
